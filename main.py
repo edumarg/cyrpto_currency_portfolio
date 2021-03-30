@@ -1,4 +1,5 @@
-from requests import Request, Session
+# from requests import Request, Session
+import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import os
@@ -11,23 +12,18 @@ os.system('clear')
 if __name__ == "__main__":
     os.system('cls')
     API_KEY = config("API_KEY")
+    # For the API documentation go to
+    # https://coinmarketcap.com/api/documentation/v1/#section/Quick-Start-Guide
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
     parameters = {
         'start': '1',
         'limit': '50',
-        'convert': 'USD'
+        'convert': 'USD',
     }
-    headers = {
-        'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': API_KEY,
-    }
-
-    session = Session()
-    session.headers.update(headers)
-
     try:
-        response = session.get(url, params=parameters)
-        data = json.loads(response.text)
-        pprint(data)
+        api_request = requests.get(
+            f'{url}?start={parameters["start"]}&limit={parameters["limit"]}&convert={parameters["convert"]}&CMC_PRO_API_KEY={API_KEY}')
+        data = json.loads(api_request.content)
+        pprint(data["data"])
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         pprint(e)
