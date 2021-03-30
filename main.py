@@ -1,59 +1,65 @@
-# from requests import Request, Session
 import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import os
 from decouple import config
 from prettyprinter import pprint
+from tkinter import *
+
+# For the API documentation go to
+# https://coinmarketcap.com/api/documentation/v1/#section/Quick-Start-Guide
+
+API_KEY = config("API_KEY")
+url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+parameters = {
+    'start': '1',
+    'limit': '50',
+    'convert': 'USD',
+    "CMC_PRO_API_KEY": API_KEY,
+}
+
+my_portfolio = [
+    {
+        "symbol": "BTC",
+        "amount_owned": 2000,
+        "price_payed_per_unit": 20.0
+    },
+    {
+        "symbol": "ETH",
+        "amount_owned": 500,
+        "price_payed_per_unit": 2.0
+    },
+    {
+        "symbol": "XPR",
+        "amount_owned": 1500,
+        "price_payed_per_unit": 0.1
+    },
+    {
+        "symbol": "XLM",
+        "amount_owned": 2000,
+        "price_payed_per_unit": 0.2
+    },
+    {
+        "symbol": "EOS",
+        "amount_owned": 1000,
+        "price_payed_per_unit": 2.0
+    },
+]
 
 # Clear command line window
 os.system('clear')
 
-if __name__ == "__main__":
-    os.system('cls')
-    API_KEY = config("API_KEY")
-    # For the API documentation go to
-    # https://coinmarketcap.com/api/documentation/v1/#section/Quick-Start-Guide
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-    parameters = {
-        'start': '1',
-        'limit': '50',
-        'convert': 'USD',
-        "CMC_PRO_API_KEY": API_KEY,
-    }
-    try:
-        api_request = requests.get(url=url, params=parameters)
-        data = json.loads(api_request.content)
-        coins = data["data"]
-        my_portfolio = [
-            {
-                "symbol": "BTC",
-                "amount_owned": 2000,
-                "price_payed_per_unit": 20.0
-            },
-            {
-                "symbol": "ETH",
-                "amount_owned": 500,
-                "price_payed_per_unit": 2.0
-            },
-            {
-                "symbol": "XPR",
-                "amount_owned": 1500,
-                "price_payed_per_unit": 0.1
-            },
-            {
-                "symbol": "XLM",
-                "amount_owned": 2000,
-                "price_payed_per_unit": 0.2
-            },
-            {
-                "symbol": "EOS",
-                "amount_owned": 1000,
-                "price_payed_per_unit": 2.0
-            },
-        ]
-        portfolio_profit_loos = 0
 
+def get_api_info():
+    api_request = requests.get(url=url, params=parameters)
+    data = json.loads(api_request.content)
+    return data["data"]
+
+
+def format_data():
+    try:
+        coins = get_api_info()
+        portfolio_profit_loos = 0
         for coin in coins:
             for sym in my_portfolio:
                 if sym["symbol"] == coin["symbol"]:
@@ -83,3 +89,8 @@ if __name__ == "__main__":
 
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         pprint(e)
+
+
+if __name__ == "__main__":
+    os.system('cls')
+    format_data()
