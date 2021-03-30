@@ -24,6 +24,11 @@ if __name__ == "__main__":
         api_request = requests.get(
             f'{url}?start={parameters["start"]}&limit={parameters["limit"]}&convert={parameters["convert"]}&CMC_PRO_API_KEY={API_KEY}')
         data = json.loads(api_request.content)
-        pprint(data["data"])
+        coins = data["data"]
+        for coin in coins:
+            pprint({'Name': coin["name"],
+                    'Symbol': coin["symbol"],
+                    "price (USD)": coin["quote"]["USD"]["price"]})
+
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         pprint(e)
