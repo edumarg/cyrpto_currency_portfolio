@@ -6,6 +6,12 @@ from decouple import config
 from prettyprinter import pprint
 from tkinter import *
 
+# For Tkinter documentation go to https://docs.python.org/3/library/tkinter.html
+root = Tk()
+root.title("My Crypto Currency Portfolio")
+root.iconbitmap(r'./coin.ico')
+root.mainloop()
+
 # For the API documentation go to
 # https://coinmarketcap.com/api/documentation/v1/#section/Quick-Start-Guide
 
