@@ -60,24 +60,33 @@ def add_coin_msg_to_gui(coin_msg):
                            relief='ridge',
                            borderwidth=2,
                            bg='#F2F2F2')
-    coin_frame.pack(pady=(10, 0),
-                    padx=(5, 5),
-                    fill='x',
-                    anchor='center')
+    coin_frame.pack(
+        anchor='center',
+        pady=(10, 0),
+        padx=(50, 50),
+        fill='x'
+    )
+
     display_coin_msg = GUI.Label(coin_frame,
                                  text=coin_msg,
                                  anchor='w',
                                  font=('Time New Roman', '13', 'bold underline'),
                                  bg='#F2F2F2')
-    display_coin_msg.pack(fill='x')
+    display_coin_msg.pack(fill='x',
+                          padx=10)
 
 
 def show_portfolio_profit_loss_on_gui(profit_loos):
     # view client version on bottom left corner
+    if profit_loos > 0:
+        color = "green"
+    else:
+        color = "red"
     portfolio_profit_loos_label = GUI.Label(GUI.root,
                                             text="Portfolio Total Profit/Loos: ${0:.2f}".format(profit_loos),
                                             font=('Time New Roman', '9', 'bold'),
-                                            bg="white")
+                                            bg="white",
+                                            fg=color)
     portfolio_profit_loos_label.pack(pady=(5, 0),
                                      anchor='e')
 
@@ -94,19 +103,6 @@ def format_data():
                     profit = total_current_value - total_paid
                     profit_percentage = profit / total_paid * 100
                     profit_per_coin = float(coin["quote"]["USD"]["price"]) - sym["price_payed_per_unit"]
-                    # my_coin = {"Name": coin["name"],
-                    #            "Symbol": coin["symbol"],
-                    #            "Rank": coin["cmc_rank"],
-                    #            "Current Price": "${0:.2f}".format(float(coin["quote"]["USD"]["price"])),
-                    #            "24 Hour Change:": "{0:.2f}%".format(float(coin["quote"]["USD"]["percent_change_24h"])),
-                    #            "Paid per coin": "${0:.2f}".format(float(sym["price_payed_per_unit"])),
-                    #            "Amount Owned": f'{sym["amount_owned"]} units',
-                    #            "Total current value": "${0:.2f}".format(total_current_value),
-                    #            "Total Paid": "${0:.2f}".format(total_paid),
-                    #            "Profit/Loss per coin:": "${0:.2f}".format(profit_per_coin),
-                    #            "Profit/Loss:": "${0:.2f}".format(profit),
-                    #            "Profit/Loss percentage": "{0:.2f}%".format(profit_percentage),
-                    #            }
                     my_coin_msg = f'Name: {coin["name"]} \n' \
                                   f'Symbol: {coin["symbol"]} \n' \
                                   f'Rank: {coin["cmc_rank"]} \n' \
@@ -120,10 +116,7 @@ def format_data():
                                   f'Profit/Loss: ${profit:.2f} \n' \
                                   f'Profit/Loss percentage: {profit_percentage:.2f}%'
                     portfolio_profit_loos += profit
-                    # display_coin_msg = Label(root, text=my_coin_msg)
-                    # display_coin_msg.pack()
                     add_coin_msg_to_gui(my_coin_msg)
-        # print("Portfolio Total Profit/Loos: ", "${0:.2f}".format(portfolio_profit_loos))
         show_portfolio_profit_loss_on_gui(portfolio_profit_loos)
 
     except (ConnectionError, Timeout, TooManyRedirects) as e:
@@ -134,6 +127,4 @@ if __name__ == "__main__":
     # Clear command line window
     os.system('cls')
     format_data()
-    print("start")
     GUI.root.mainloop()
-    print("GUI")

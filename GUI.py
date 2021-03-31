@@ -38,7 +38,8 @@ my_canvas.bind('<Configure>',
 # add another frame to canvas
 second_frame = Frame(my_canvas,
                      bg='white',
-                     borderwidth=0)
+                     borderwidth=0,
+                     )
 
 # add frame to new windows in canvas
 my_canvas.create_window((0, 0),
